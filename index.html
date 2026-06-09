@@ -1,0 +1,1764 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ruang Teduh - Pendamping Batin Virtual & Konseling Remaja</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- React and ReactDOM production CDNs -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  
+  <!-- Babel Standalone for JSX compilation in-browser -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Elegant global styling scrollbars & float animations */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+    .animate-float {
+      animation: float 4s ease-in-out infinite;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    body {
+      background-color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="min-h-screen text-slate-800 flex flex-col relative">
+
+  <div id="root"></div>
+
+  <!-- React Application Core Script (JSX) -->
+  <script type="text/babel">
+    const { useState, useEffect, useRef } = React;
+
+    // --- STATIC DATA RESOURCE EMBEDDED ---
+    const ARTICLES = [
+      {
+        id: 'art_1',
+        title: 'Seni Mengenal Diri & Berdamai dengan Ekspektasi',
+        category: 'Self-Knowledge',
+        brief: 'Membantu remaja memahami identitas diri unik mereka tanpa terperangkap jebakan perbandingan sosial.',
+        content: `### Belajar Mencintai Diri (Self-Acceptance)
+
+Apakah kamu sering merasa berkecil hati saat melihat pencapaian orang lain di media sosial? Perasaan ini sangat wajar dialami oleh siapa pun yang sedang tumbuh dewasa. Fase remaja adalah masa di mana kita mencari tahu "Siapa sih aku ini sebenarnya?".
+
+Mengenal diri sendiri bukan berarti kita harus sempurna. Justru, ini adalah langkah untuk menerima bahwa kita memiliki kelebihan dan kekurangan yang unik:
+
+1. **Kenali Bakat & Minat Unikmu**: Jangan membandingkan halaman pertama buku hidupmu dengan halaman kesepuluh orang lain.
+2. **Ungkapkan Perasaanmu secara Jujur**: Menolak emosi sedih, takut, atau marah justru membuatnya bertumpuk di batin. Berikan ruang untuk merasakannya tanpa menghakimi diri sendiri.
+3. **Batasi Kebisingan Luar**: Luangkan waktu sejenak dari media sosial. Fokus pada hal-hal kecil di sekitarmu yang membuatmu merasa damai dan dihargai.
+
+Ingat, kamu berharga bukan karena kamu sempurna, melainkan karena kamu adalah satu-satunya dirimu di dunia ini.`,
+        tags: ['Edukasi Diri', 'Berdamai', 'Remaja Sehat', 'Mindfulness']
+      },
+      {
+        id: 'art_2',
+        title: 'Panduan Mengurai Badai Kecemasan (Anxiety Desk)',
+        category: 'Anxiety',
+        brief: 'Teknik-teknik praktis instan saat batin mengalami kepanikan atau rasa cemas berlebih.',
+        content: `### Menghadapi "Overthinking" & Kecemasan Batin
+
+Pernahkah kamu merasakan jantung berdebar kencang, pernapasan menjadi pendek, atau pikiranmu seperti berputar-putar tanpa henti membahas skenario terburuk yang belum tentu terjadi? Itu adalah alarm alami dari sistem pertahanan batinmu (flight or fight response).
+
+Ketika badai cemas melanda, jangan mencoba melawan pikiran tersebut secara paksa. Sebaliknya, mari pelajari teknik mengistirahatkan batin berikut ini:
+
+1. **Teknik 5-4-3-2-1 Grounding**:
+   - Sebutkan **5** benda yang bisa kamu lihat di ruangan.
+   - Rasakan **4** permukaan fisik (baju, meja, tangan hangatmu).
+   - Dengarkan **3** suara yang ada di sekelilingmu.
+   - Hirup aroma **2** hal di dekatmu.
+   - Rasakan **1** rasa di lidahmu.
+2. **Pernapasan Kotak (Box Breathing)**:
+   - Tarik napas melalui hidung selama **4 detik**.
+   - Tahan napasmu selama **4 detik**.
+   - Hembuskan perlahan lewat mulut selama **4 detik**.
+   - Tahan dalam kondisi kosong selama **4 detik**. Ulangi 3 kali.
+3. **Urai dalam Kata**: Menuliskan ketakutan terbesarmu di selembar kertas atau jurnal batin sering kali membuat masalah tersebut tampak lebih kecil dan lebih bisa dikendalikan.`,
+        tags: ['Kecemasan', 'Box Breathing', 'Overthinking', 'Tenang']
+      },
+      {
+        id: 'art_3',
+        title: 'Membangun Relasi Sehat & Batasan Hubungan',
+        category: 'Healthy Relations',
+        brief: 'Cara berkomunikasi secara sehat tanpa mengorbankan ketenteraman jiwa.',
+        content: `### Menghargai Batasan Diri (Personal Boundaries)
+
+Menjadi bagian dari suatu lingkaran pertemanan atau menjalin hubungan dekat adalah hal yang indah. Namun, sering kali remaja merasa takut berkata "Tidak" karena cemas akan ditinggalkan atau dianggap kurang asyik.
+
+Relasi yang sehat tidak akan menuntutmu mengorbankan kesehatan mentalmu:
+
+1. **Katakan Ya/Tidak dengan Tegas namun Sopan**: Memiliki batasan diri bukan berarti sombong. Ini adalah cara kamu melindungi energimu agar batin tidak lelah ("Maaf, hari ini aku butuh waktu istirahat di rumah dulu ya").
+2. **Waspadai Sikap Orang Lain (Red Flags)**: Jika teman atau pasangan terus menuntutmu melakukan sesuatu yang membuat batinmu merasa tertekan dan ketakutan, itu tanda relasi tersebut butuh evaluasi.
+3. **Cari Teman yang Saling Mengisi**: Carilah lingkungan yang merayakan keberhasilanmu dan memeluk kerapuhanmu ketika kamu sedang jatuh. 
+
+Relasi terbaik adalah relasi yang membuatmu merasa aman untuk menjadi dirimu yang jujur.`,
+        tags: ['Hubungan Sehat', 'Batasan Diri', 'Komunikasi', 'Persahabatan']
+      }
+    ];
+
+    const QUIZ_QUESTIONS = [
+      {
+        id: 1,
+        text: 'Seberapa sering kamu merasa batinmu sangat bising atau kewalahan oleh berbagai pikiran akhir-akhir ini?',
+        options: [
+          { text: 'Hampir tidak pernah, mentalku cukup tenang', score: 0 },
+          { text: 'Kadang-kadang saja jika tugas menumpuk', score: 1 },
+          { text: 'Sering sekali, rasanya melelahkan', score: 2 },
+          { text: 'Hampir setiap saat, sampai dada terasa sesak', score: 3 }
+        ]
+      },
+      {
+        id: 2,
+        text: 'Apakah kamu mengalami kesulitan tidur karena pikiranmu terus mengulang kejadian atau mencemaskan masa depan?',
+        options: [
+          { text: 'Tidak sama sekali, tidurku sangat nyenyak', score: 0 },
+          { text: 'Hanya sekali-sekali saat akan ujian saja', score: 1 },
+          { text: 'Sering bergadang karena overthinking', score: 2 },
+          { text: 'Sangat sulit tidur nyenyak, merasa lelah terus', score: 3 }
+        ]
+      },
+      {
+        id: 3,
+        text: 'Bagaimana reaksi tubuhmu saat merasa tertekan (misalnya pundak kaku, jari gemetar, atau lambung nyeri)?',
+        options: [
+          { text: 'Tubuhku tetap rileks dan santai', score: 0 },
+          { text: 'Sedikit kaku tapi cepat mereda kembali', score: 1 },
+          { text: 'Cukup sering merasa sakit kepala/pegal mendadak', score: 2 },
+          { text: 'Tubuhku sangat bereaksi keras hingga mual atau gemetar', score: 3 }
+        ]
+      },
+      {
+        id: 4,
+        text: 'Seberapa mudah kamu kehilangan konsentrasi atau merasa fokusmu gampang pudar akhir-akhir ini?',
+        options: [
+          { text: 'Sangat mudah fokus seperti biasa', score: 0 },
+          { text: 'Kadang terdistraksi jika lelah saja', score: 1 },
+          { text: 'Terkadang melamun berjam-jam tanpa arah', score: 2 },
+          { text: 'Sangat sulit memahami materi atau fokus bercakap-cakap', score: 3 }
+        ]
+      },
+      {
+        id: 5,
+        text: 'Seberapa peka atau mudah tersinggung perasaanmu (misal mudah menangis atau tersulut amarah) dibandingkan biasanya?',
+        options: [
+          { text: 'Stabil dan tenang dalam menanggapi masalah', score: 0 },
+          { text: 'Sedikit sensitif jika kurang tidur saja', score: 1 },
+          { text: 'Gampang sedih atau kesal oleh hal-hal sepele', score: 2 },
+          { text: 'Emosiku sangat labil, rasanya meledak-ledak di dalam', score: 3 }
+        ]
+      }
+    ];
+
+    const EMERGENCY_HOTLINES = [
+      {
+        name: 'Konseling Utama WhatsApp Sahabat Akifah (Saya)',
+        phone: '0822-9799-7778',
+        type: 'Respon Utama',
+        description: 'WhatsApp resmi bimbingan konseling batin untuk berdiskusi langsung, mencurahkan keluh kesah, atau menjadwalkan bimbingan mendalam.'
+      },
+      {
+        name: 'Kemenkes Sejiwa (Layanan Kesehatan Jiwa Kemenkes)',
+        phone: '119 ext. 8',
+        type: 'Gratis & Resmi',
+        description: 'Layanan konseling resmi dari Kementerian Kesehatan RI untuk pendampingan psikologis dalam menghadapi masalah emosional.'
+      },
+      {
+        name: 'Into The Light Indonesia (Komunitas Pencegahan Bunuh Diri)',
+        phone: 'intothelightid.org',
+        type: 'Rujukan & Edukasi',
+        description: 'Komunitas pencegahan bunuh diri berbasis remaja. Menyediakan panduan rujukan psikolog dan psikiater ramah kantong di berbagai daerah.'
+      },
+      {
+        name: 'Yayasan Pulih (Konseling Psikologis Terjangkau)',
+        phone: '021-78842580',
+        type: 'Konseling Profesional',
+        description: 'Lembaga non-profit yang melayani terapi psikologis, trauma, konflik keluarga, dan kekerasan remaja dengan tarif sangat terjangkau.'
+      },
+      {
+        name: 'Sahabatku (Layanan Curhat Remaja Virtual)',
+        phone: '0812-3456-xxxx (Virtual)',
+        type: 'Pendamping Remaja',
+        description: 'Pendamping sebaya virtual. Ingat, kamu tidak pernah sendirian melangkah di dunia luar.'
+      }
+    ];
+
+    const DEFAULT_FEEDBACKS = [
+      { id: "f1", rating: 5, comment: "Curhat sama Akifah tenang banget, berasa didengar sepenuh hati tanpa dihakimi.", createdAt: "2026-06-08T08:00:00.000Z", userName: "Siti" },
+      { id: "f2", rating: 5, comment: "Latihan napas box breathing-nya ngebantu aku meredakan panik sebelum ujian matematika.", createdAt: "2026-06-08T07:15:00.000Z", userName: "Rian" },
+      { id: "f3", rating: 4, comment: "Jurnal emosinya keren, beneran bisa mendeteksi mood aku yang lagi lelah belakangan ini.", createdAt: "2026-06-08T06:30:00.000Z", userName: "Amanda" },
+      { id: "f4", rating: 5, comment: "Akhirnya ada tempat curhat yang aman dan nggak bocor ke mana-mana. Terima kasih Ruang Teduh!", createdAt: "2026-06-08T05:40:00.000Z", userName: "Dimas" },
+      { id: "f5", rating: 5, comment: "Suka banget sama quotes penenang di akhir sesi chatnya. Berasa dipeluk hangat.", createdAt: "2026-06-08T04:20:00.000Z", userName: "Aisyah" },
+      { id: "f6", rating: 4, comment: "Fitur kalkulator tingkat stresnya menarik buat refleksi diri mingguan.", createdAt: "2026-06-07T22:15:00.000Z", userName: "Budi" },
+      { id: "f7", rating: 5, comment: "Sangat membantu mengatasi overthinking kalau malam hari. Terima kasih Akifah!", createdAt: "2026-06-07T19:30:00.000Z", userName: "Cici" },
+      { id: "f8", rating: 5, comment: "Gara-gara aplikasi ini, aku jadi rutin nulis jurnal batin tiap malam.", createdAt: "2026-06-07T15:10:00.000Z", userName: "Dafa" }
+    ];
+
+    // --- EMPATHETIC SIMULATION CHATBOT ALGORITHMS ---
+    function generateEmpatheticResponse(userText, userName, userAge, userGender, articleTheme = null) {
+      const txt = userText.toLowerCase();
+      let response = "";
+      
+      const header = `Halo ${userName || 'Sahabat'}... `;
+      
+      if (articleTheme) {
+        response += `Menyambung pembicaraan kita mengenai artikel *"${articleTheme}"* yang baru saja kamu baca. Terbuka sekali bagiku mendengar perspektif batinmu tentang topik ini. \n\n`;
+      }
+
+      if (txt.includes('sedih') || txt.includes('menangis') || txt.includes('kecewa') || txt.includes('hancur')) {
+        response += `Aku bisa merasakan betapa mendungnya batinmu saat ini. Menangis atau merasa sedih bukanlah tanda kamu lemah, melainkan tanda bahwa kamu adalah manusia seutuhnya yang memiliki hati yang lembut.\n\nTaruh tanganmu di dadamu, rasakan detak jantungmu, lalu hembuskan napas perlahan. Ingat, perasaan ini bagaikan awan mendung—ia datang menyapa, namun ia pasti akan berlalu untuk membiarkan langit birumu kembali bersinar. Ceritakanlah padaku pelan-pelan apa yang membuat batinmu seberat ini, aku sedia mendengarmu. ❤️`;
+      } 
+      else if (txt.includes('cemas') || txt.includes('panik') || txt.includes('takut') || txt.includes('grogi') || txt.includes('khawatir')) {
+        response += `Kecemasan itu seperti alarm batin yang berdenting terlalu keras. Sangat wajar jika dadamu terasa sesak atau pikiranmu berputar kencang.\n\nAyo gabung bersamaku melakukan relaksasi instan sejenak:\nHirup napas dari hidung dalam-dalam selama **4 detik**... Tahan **4 detik**... Hembuskan secara perlahan lewat mulut seperti mendesah lega selama **4 detik**.\n\nApakah kecemasanmu ini berhubungan dengan sekolah, masa depan, atau ada hubungan keluarga/pertemanan yang sedang merisaukanmu? Ambillah waktumu untuk bercerita. ✨`;
+      }
+      else if (txt.includes('lelah') || txt.includes('capek') || txt.includes('bosan') || txt.includes('stres') || txt.includes('pusing')) {
+        response += `Batin yang lelah adalah tanda kamu sudah berjuang sekuat tenaga melewati banyak hal berat belakangan ini. Kamu hebat sudah bertahan sejauh ini!\n\nPertama-tama, izinkan dirimu beristirahat sejenak dari tuntutan dunia luar ya. Tidak apa-apa jika hari ini kamu tidak produktif. Apakah tugas sekolah yang menumpuk atau ekspektasi yang terlalu tinggi yang membuat pundakmu terasa tegang? Di Ruang Teduh ini, kamu boleh meletakkan beban itu sejenak. Aku siap menemanimu. 😴`;
+      }
+      else if (txt.includes('marah') || txt.includes('benci') || txt.includes('kesal') || txt.includes('emosi')) {
+        response += `Kemarahan adalah emosi yang valid dan lumrah. Jangan ditekan kencang ya sahabat, ayo kita salurkan secara damai.\n\nCobalah remas bantal di dekatmu atau urai penyebab kekesalanmu lewat tulisan jurnal di sini. Apakah ada orang di sekitarmu yang merusak batasan dirimu atau memperlakukanmu secara kurang adil? Biarkan aku mendengarmu menguraikan rasa kesalmu secara bebas. 🕊️`;
+      }
+      else if (txt.includes('teman') || txt.includes('sahabat') || txt.includes('pacar') || txt.includes('relasi') || txt.includes('bully') || txt.includes('toxic')) {
+        response += `Hubungan sosial di masa remaja memang terkadang penuh dinamika yang menguras emosi. Kadang kita merasa terasingkan atau bahkan sulit berkata "Tidak" karena takut dijauhi.\n\nIngatlah batasan yang sehat: relasi terbaik adalah relasi yang membuatmu merasa aman menceritakan kerapuhanmu, bukan yang menuntutmu mengorbankan ketenteraman jiwamu. Ceritakan padaku, situasi pertemanan seperti apa yang sedang membebani batinmu hari ini? ` + (userAge ? `Di usiamu yang ${userAge} tahun, ini adalah masa yang sangat melatih ketajaman emosi.` : ``);
+      }
+      else if (txt.includes('keluarga') || txt.includes('ortu') || txt.includes('orang tua') || txt.includes('ayah') || txt.includes('ibu') || txt.includes('rumah')) {
+        response += `Rumah dan keluarga terkadang bisa menjadi tempat yang paling hangat, namun di saat lain juga bisa menimbulkan tekanan batin yang mendalam karena adanya perbedaan ekspektasi antar generasi.\n\nKetahuilah bahwa kamu tidak bisa mengontrol reaksi atau kata-kata orang tuamu, tetapi kamu selalu punya daya penuh untuk melindungi kedamaian batin dalam dirimu sendiri. Jika kamu merasa sesak di dalam rumah, mari keluarkan pelan-pelan di sini. Aku akan selalu mendengarkan keluh kesahmu tanpa menghakimi. ❤️`;
+      }
+      else if (txt.includes('sekolah') || txt.includes('ujian') || txt.includes('tugas') || txt.includes('belajar') || txt.includes('bk') || txt.includes('nilai')) {
+        response += `Tuntutan sekolah, tugas yang tak kunjung habis, atau ketakutan akan kegagalan nilai memang bisa memicu stres berkepanjangan pada remaja.\n\nIngat ya sahabat, selembar kertas hasil ujian tidak pernah mendefinisikan nilai dirimu yang seutuhnya. Kamu jauh lebih berharga daripada angka di atas rapor. Cobalah bagi belajarmu menjadi langkah-langkah kecil, dan jangan lupa selipkan jeda bernapas. Bagaimana detail kekhawatiran belajarmu saat ini? Moga-moga kita bisa cari jalan keluar bersama secara perlahan.`;
+      }
+      else {
+        response += `Terima kasih banyak sudah mempercayakan cerita ini kepadaku. Setiap kata yang kamu tulis adalah langkah keberanian luar biasa untuk menyembuhkan batin.\n\nAku mendengarkanmu dengan seluruh empati batin yang hangat di Ruang Teduh. Bisakah kamu ceritakan lebih banyak tentang perasaanmu saat ini agar kita bisa mengurainya bersama secara bertahap? Aku siap berada di sisimu. 🌸`;
+      }
+
+      return header + response;
+    }
+
+    // --- ICON HELPER COMPONENT (SVG-based for complete standalone offline compatibility) ---
+    function Icon({ name, className = "w-5 h-5", fill = "none" }) {
+      useEffect(() => {
+        if (window.lucide) {
+          window.lucide.createIcons();
+        }
+      }, [name]);
+      return <i data-lucide={name} class={`${className} inline-block`} style={{ fill: fill }}></i>;
+    }
+
+    // --- MAIN COMPONENT ---
+    function App() {
+      const [activeTab, setActiveTab] = useState('chat');
+      const [currentArticleContext, setCurrentArticleContext] = useState(null);
+      
+      // User profile states
+      const [userName, setUserName] = useState('');
+      const [userAge, setUserAge] = useState('');
+      const [userGender, setUserGender] = useState('');
+      const [showOnboarding, setShowOnboarding] = useState(false);
+      const [greeting, setGreeting] = useState('Selamat Datang');
+
+      // Feedback wall list persistence
+      const [feedbacks, setFeedbacks] = useState([]);
+      const [ratingsCount, setRatingsCount] = useState(24);
+      const [averageScore, setAverageScore] = useState(4.8);
+
+      // Mood Journal states
+      const [journalEntries, setJournalEntries] = useState([]);
+
+      useEffect(() => {
+        // Load Profile
+        const savedName = localStorage.getItem('sahabat_username');
+        const savedAge = localStorage.getItem('sahabat_userage');
+        const savedGender = localStorage.getItem('sahabat_usergender');
+        
+        if (savedName) setUserName(savedName);
+        if (savedAge) setUserAge(savedAge);
+        if (savedGender) setUserGender(savedGender);
+
+        if (!savedName || !savedAge || !savedGender) {
+          setShowOnboarding(true);
+        }
+
+        // Greeting hourly check
+        const hours = new Date().getHours();
+        let text = 'Selamat Pagi';
+        if (hours >= 11 && hours < 15) text = 'Selamat Siang';
+        else if (hours >= 15 && hours < 18) text = 'Selamat Sore';
+        else if (hours >= 18 || hours < 4) text = 'Selamat Malam';
+        setGreeting(text);
+
+        // Load Feedbacks from localStorage
+        const savedFeedbacks = localStorage.getItem('sahabat_feedbacks');
+        if (savedFeedbacks) {
+          try {
+            const parsed = JSON.parse(savedFeedbacks);
+            setFeedbacks(parsed);
+            calculateFeedbackStats(parsed);
+          } catch(e) {
+            setFeedbacks(DEFAULT_FEEDBACKS);
+          }
+        } else {
+          localStorage.setItem('sahabat_feedbacks', JSON.stringify(DEFAULT_FEEDBACKS));
+          setFeedbacks(DEFAULT_FEEDBACKS);
+          calculateFeedbackStats(DEFAULT_FEEDBACKS);
+        }
+
+        // Load Journals from localStorage
+        const savedJournals = localStorage.getItem('sahabat_journal_entries');
+        if (savedJournals) {
+          try {
+            setJournalEntries(JSON.parse(savedJournals));
+          } catch(e) {}
+        }
+      }, []);
+
+      const calculateFeedbackStats = (list) => {
+        const count = list.length;
+        if (count === 0) {
+          setRatingsCount(0);
+          setAverageScore(0);
+          return;
+        }
+        const sum = list.reduce((acc, curr) => acc + curr.rating, 0);
+        setRatingsCount(count);
+        setAverageScore(parseFloat((sum / count).toFixed(1)));
+      };
+
+      const handleSaveProfile = (name, age, gender) => {
+        setUserName(name);
+        setUserAge(age);
+        setUserGender(gender);
+        localStorage.setItem('sahabat_username', name);
+        localStorage.setItem('sahabat_userage', age);
+        localStorage.setItem('sahabat_usergender', gender);
+        setShowOnboarding(false);
+      };
+
+      const handleDiscussArticle = (title) => {
+        setCurrentArticleContext(title);
+        setActiveTab('chat');
+      };
+
+      return (
+        <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans relative">
+          
+          {/* Top aesthetic decorative layout element */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-44 bg-gradient-to-b from-emerald-100/40 to-transparent blur-3xl pointer-events-none" />
+
+          {/* Sticky Nav Bar Header */}
+          <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-100">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+              
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-emerald-600 flex items-center justify-center shadow-md shadow-emerald-600/10 animate-float">
+                  <Icon name="heart" className="w-5 h-5 text-white" fill="white" />
+                </div>
+                <div className="text-left">
+                  <h1 className="font-display font-extrabold text-slate-900 text-sm md:text-base tracking-tight leading-none">
+                    Ruang Teduh
+                  </h1>
+                  <p className="text-[10px] text-emerald-600 font-bold tracking-wide mt-1">
+                    Akifah Pendamping Batin Virtual
+                  </p>
+                </div>
+              </div>
+
+              {/* Toolbar Right Side */}
+              <div className="flex items-center gap-3">
+                <div className="hidden sm:flex flex-col text-right">
+                  <span className="text-xs font-bold text-slate-800">{userName || 'Sahabat'}</span>
+                  {userAge && (
+                    <span className="text-[9px] text-slate-400 font-medium font-mono">
+                      {userAge} Thn • {userGender}
+                    </span>
+                  )}
+                </div>
+                
+                <button
+                  onClick={() => setShowOnboarding(true)}
+                  className="flex items-center gap-1.5 bg-purple-50 text-purple-700 hover:bg-purple-100 border border-purple-100 rounded-full px-3.5 py-1.5 text-xs font-bold transition-all cursor-pointer"
+                >
+                  <Icon name="smile" className="w-3.5 h-3.5 text-purple-600" />
+                  <span>{userName ? 'Ubah Profil' : 'Lengkapi Profil'}</span>
+                </button>
+              </div>
+
+            </div>
+          </header>
+
+          {/* Sub Navigation Bar Tabs */}
+          <nav className="bg-white/40 border-b border-slate-200/50 py-2.5 px-4 overflow-x-auto scrollbar-none sticky top-16 z-30 backdrop-blur-xs">
+            <div className="max-w-7xl mx-auto flex items-center gap-1.5 sm:gap-2">
+              
+              <button
+                onClick={() => { setActiveTab('chat'); }}
+                className={`flex items-center gap-2 px-3 py-2 rounded-xl font-display font-extrabold text-xs shrink-0 transition-all ${
+                  activeTab === 'chat' 
+                    ? 'bg-emerald-600 text-white shadow-sm' 
+                    : 'text-slate-600 hover:bg-white/80 hover:text-emerald-700'
+                }`}
+              >
+                <Icon name="heart" className="w-4 h-4" fill={activeTab === 'chat' ? 'white' : 'currentColor'} />
+                <span>Ruang Teduh (Chat)</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('education')}
+                className={`flex items-center gap-2 px-3 py-2 rounded-xl font-display font-extrabold text-xs shrink-0 transition-all ${
+                  activeTab === 'education' 
+                    ? 'bg-emerald-600 text-white shadow-sm' 
+                    : 'text-slate-600 hover:bg-white/80 hover:text-emerald-700'
+                }`}
+              >
+                <Icon name="book-open" className="w-4 h-4" />
+                <span>Pojok Edukasi</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('journal')}
+                className={`flex items-center gap-2 px-3 py-2 rounded-xl font-display font-extrabold text-xs shrink-0 transition-all ${
+                  activeTab === 'journal' 
+                    ? 'bg-emerald-600 text-white shadow-sm' 
+                    : 'text-slate-600 hover:bg-white/80 hover:text-emerald-700'
+                }`}
+              >
+                <Icon name="pen-tool" className="w-4 h-4" />
+                <span>Jurnal Batin (Mood)</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('stresstest')}
+                className={`flex items-center gap-2 px-3 py-2 rounded-xl font-display font-extrabold text-xs shrink-0 transition-all ${
+                  activeTab === 'stresstest' 
+                    ? 'bg-emerald-600 text-white shadow-sm' 
+                    : 'text-slate-600 hover:bg-white/80 hover:text-emerald-700'
+                }`}
+              >
+                <Icon name="help-circle" className="w-4 h-4" />
+                <span>Kalkulator Stres</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('emergency')}
+                className={`flex items-center gap-2 px-3 py-2 rounded-xl font-display font-extrabold text-xs shrink-0 transition-all ${
+                  activeTab === 'emergency' 
+                    ? 'bg-emerald-600 text-white shadow-sm' 
+                    : 'text-slate-600 hover:bg-white/80 hover:text-emerald-700'
+                }`}
+              >
+                <Icon name="phone-call" className="w-4 h-4" />
+                <span>Alamat Penting SOS</span>
+              </button>
+
+              <button
+                onClick={() => setActiveTab('feedback')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl font-display font-extrabold text-xs shrink-0 transition-all ${
+                  activeTab === 'feedback' 
+                    ? 'bg-emerald-600 text-white shadow-sm' 
+                    : 'text-slate-600 hover:bg-white/80 hover:text-emerald-700'
+                }`}
+              >
+                <Icon name="smile" className="w-4 h-4" />
+                <span>Kepuasan Sahabat</span>
+              </button>
+
+            </div>
+          </nav>
+
+          {/* Main Workspace Frame container */}
+          <main className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 lg:p-8 space-y-8 relative">
+            
+            {/* Greeting Card Header if in core categories */}
+            {(activeTab !== 'feedback' && activeTab !== 'emergency') && (
+              <div className="bg-gradient-to-r from-[#1e293b] to-[#0f172a] shadow-xl rounded-3xl p-6 md:p-8 text-white relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6" id="welcome-badge-panel">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-44 h-44 bg-purple-500/10 rounded-full blur-2xl pointer-events-none" />
+                
+                <div className="space-y-2 relative z-10 text-left">
+                  <div className="inline-flex items-center gap-1.5 bg-emerald-600 text-white px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                    <Icon name="sparkles" className="w-3 h-3 text-white" />
+                    <span>Ruang Teduh - Sahabat Batin Sejatimu</span>
+                  </div>
+                  <h2 className="font-display font-extrabold text-2xl md:text-3xl tracking-tight leading-tight">
+                    {greeting}, {userName || 'Sahabat'} 👋
+                  </h2>
+                  <p className="text-slate-300 text-xs md:text-sm max-w-xl font-medium leading-relaxed">
+                    Kami hadir menemanimu merapikan rasa lelah, meredakan kepanikan, meluncurkan perasaan damai, serta menjadi pemeluk hangat batinmu yang sedang bertumbuh.
+                  </p>
+                </div>
+
+                <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/15 p-4 shrink-0 text-left md:w-56 space-y-2">
+                  <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Pelacak Mandiri</p>
+                  <div className="flex items-center justify-between text-xs font-semibold">
+                    <span>Terdaftar:</span>
+                    <span className="text-emerald-400 font-bold font-mono">1 Remaja</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs font-semibold">
+                    <span>Jumlah Jurnal:</span>
+                    <span className="text-purple-300 font-bold font-mono">{journalEntries.length} Entri</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* TAB: CHAT ROOM MODULE */}
+            {activeTab === 'chat' && (
+              <ChatRoomTab 
+                currentArticleContext={currentArticleContext}
+                onClearArticleContext={() => setCurrentArticleContext(null)}
+                userName={userName}
+                userAge={userAge}
+                userGender={userGender}
+              />
+            )}
+
+            {/* TAB: EDUCATION MODULE */}
+            {activeTab === 'education' && (
+              <EducationTab onDiscussArticle={handleDiscussArticle} />
+            )}
+
+            {/* TAB: MOOD JOURNAL TRACKING MODULE */}
+            {activeTab === 'journal' && (
+              <JournalTab 
+                journalEntries={journalEntries} 
+                setJournalEntries={(updated) => {
+                  setJournalEntries(updated);
+                  localStorage.setItem('sahabat_journal_entries', JSON.stringify(updated));
+                }} 
+              />
+            )}
+
+            {/* TAB: STRESS TEST MODULE */}
+            {activeTab === 'stresstest' && (
+              <StressCalculatorTab onSwitchToChat={() => setActiveTab('chat')} />
+            )}
+
+            {/* TAB: EMERGENCY PORTAL */}
+            {activeTab === 'emergency' && (
+              <EmergencyTab />
+            )}
+
+            {/* TAB: FEEDBACK & RATING WALL */}
+            {activeTab === 'feedback' && (
+              <FeedbackTab 
+                feedbacksList={feedbacks} 
+                setFeedbacksList={(updated) => {
+                  setFeedbacks(updated);
+                  localStorage.setItem('sahabat_feedbacks', JSON.stringify(updated));
+                  calculateFeedbackStats(updated);
+                }}
+                ratingsCount={ratingsCount}
+                averageScore={averageScore}
+              />
+            )}
+
+          </main>
+
+          {/* Sticky Onboarding Profile Popup if not set */}
+          {showOnboarding && (
+            <OnboardingModalTab 
+              onSave={handleSaveProfile} 
+              onClose={() => userName ? setShowOnboarding(false) : null} 
+              isForce={!userName} 
+            />
+          )}
+
+          {/* App footer branding */}
+          <footer className="bg-slate-100 border-t border-slate-200/50 py-6 text-center text-xs text-slate-400 mt-auto">
+            <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center justify-between gap-4">
+              <p>© 2026 Ruang Teduh. Didedikasikan untuk Ketahanan Jiwa Remaja Indonesia.</p>
+              <p className="flex items-center gap-1.5">
+                <Icon name="clock" className="w-3.5 h-3.5" />
+                <span>Standalone Web Client-Side Edition</span>
+              </p>
+            </div>
+          </footer>
+
+        </div>
+      );
+    }
+
+    // ==========================================
+    // --- COMPONENT: ONBOARDING PROFILE FORM ---
+    // ==========================================
+    function OnboardingModalTab({ onSave, onClose, isForce }) {
+      const [name, setName] = useState('');
+      const [age, setAge] = useState('');
+      const [gender, setGender] = useState('Remaja Laki-laki');
+
+      const submitProfile = (e) => {
+        e.preventDefault();
+        if (!name.trim()) return alert("Silakan beri tahu nama panggilanmu terhangat");
+        if (!age || age < 10 || age > 25) return alert("Hanya ditujukan untuk batin remaja aktif (usia 10-25 tahun)");
+        onSave(name.trim(), age, gender);
+      };
+
+      return (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4 z-50 animate-fade-in text-left">
+          <div className="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl border border-slate-100 flex flex-col">
+            
+            <div className="p-6 md:p-8 space-y-6">
+              <div className="space-y-2 text-center">
+                <div className="inline-flex items-center justify-center w-12 h-12 rounded-full h-12 w-12 bg-emerald-500/10 text-emerald-600 mb-2">
+                  <Icon name="sparkles" className="w-6 h-6 text-emerald-600" />
+                </div>
+                <h3 className="font-display font-extrabold text-slate-900 text-xl tracking-tight">
+                  Selamat Datang di Ruang Teduh
+                </h3>
+                <p className="text-xs text-slate-500 max-w-sm mx-auto leading-relaxed">
+                  Halo Sahabat! Lengkapi profil singkatmu agar Akifah bisa memberikan tanggapan batin yang paling nyaman, mendalam, dan bersahabat untukmu.
+                </p>
+              </div>
+
+              <form onSubmit={submitProfile} className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-slate-700 block">Nama Panggilan Hangat :</label>
+                  <input 
+                     type="text" 
+                     placeholder="Contoh: Rian, Siti, Amanda" 
+                     required 
+                     value={name}
+                     onChange={(e) => setName(e.target.value)}
+                     maxLength={20}
+                     className="w-full text-slate-800 bg-slate-50 text-xs md:text-sm border border-slate-200 rounded-xl p-3 outline-none focus:ring-1 focus:ring-emerald-500 transition-all font-semibold"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-700 block">Usiamu Saat Ini (Thn) :</label>
+                    <input 
+                      type="number" 
+                      placeholder="Contoh: 16" 
+                      required 
+                      min="10" 
+                      max="25"
+                      value={age}
+                      onChange={(e) => setAge(e.target.value)}
+                      className="w-full text-slate-800 bg-slate-50 text-xs md:text-sm border border-slate-200 rounded-xl p-3 outline-none focus:ring-1 focus:ring-emerald-500 transition-all font-mono font-bold"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-bold text-slate-700 block">Jenis Kelamin :</label>
+                    <select 
+                      value={gender}
+                      onChange={(e) => setGender(e.target.value)}
+                      className="w-full text-slate-800 bg-slate-50 text-xs md:text-sm border border-slate-200 rounded-xl p-3 outline-none focus:ring-1 focus:ring-emerald-500 transition-all font-semibold"
+                    >
+                      <option value="Remaja Laki-laki">Laki-laki</option>
+                      <option value="Remaja Perempuan">Perempuan</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="pt-4 flex items-center justify-end gap-3">
+                  {!isForce && (
+                    <button 
+                      type="button" 
+                      onClick={onClose}
+                      className="px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-xs font-bold text-slate-600 cursor-pointer"
+                    >
+                      Batal
+                    </button>
+                  )}
+                  <button 
+                    type="submit"
+                    className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-3 rounded-xl flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/10 transition-all cursor-pointer"
+                  >
+                    <Icon name="smile" className="w-4 h-4 text-white" />
+                    <span>Mulai Berteduh Batin</span>
+                  </button>
+                </div>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      );
+    }
+
+    // ==========================================
+    // --- COMPONENT: CHAT COMPANION ROOM -------
+    // ==========================================
+    function ChatRoomTab({ currentArticleContext, onClearArticleContext, userName, userAge, userGender }) {
+      const STARTERS = [
+        "Aku merasa lelah akhir-akhir ini tanpa alasan yang jelas...",
+        "Bagaimana cara membatasi overthinking saat malam hari?",
+        "Aku sungkan menolak ajakan bermain teman padahal tugasku menumpuk.",
+        "Bagaimana membina hubungan pertemanan yang saling menghargai?"
+      ];
+
+      const [messages, setMessages] = useState([
+        {
+          id: 'welcome',
+          role: 'model',
+          text: `Halo ${userName || 'Sahabatku'}! Selamat datang di Ruangan Curahan Batin aman kita. Di sini batinmu bebas meluapkan kepenatan, kebingungan, dan perasaan apa pun. Semua cerita di sini dijaga dalam rahasia batin hangat kita.\n\nApakah ada hal atau beban pikiran yang ingin kita urai bersama hari ini?`,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        }
+      ]);
+      const [input, setInput] = useState('');
+      const [typing, setTyping] = useState(false);
+      const feedEndRef = useRef(null);
+
+      useEffect(() => {
+        feedEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, [messages, typing]);
+
+      const submitChat = (txt) => {
+        if (!txt.trim() || typing) return;
+
+        const userMsg = {
+          id: 'msg_' + Date.now(),
+          role: 'user',
+          text: txt,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+
+        setMessages(prev => [...prev, userMsg]);
+        setInput('');
+        setTyping(true);
+
+        // Simulated empathetic response delay for premium counseling feel
+        setTimeout(() => {
+          const aiText = generateEmpatheticResponse(txt, userName, userAge, userGender, currentArticleContext);
+          setMessages(prev => [...prev, {
+            id: 'ai_' + Date.now(),
+            role: 'model',
+            text: aiText,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          }]);
+          setTyping(false);
+          // If the reply succeeded and article context exists, let's clear it
+          if (currentArticleContext) {
+            onClearArticleContext();
+          }
+        }, 1200);
+      };
+
+      return (
+        <div className="bg-white rounded-3xl border border-slate-150 shadow-xs flex flex-col md:grid md:grid-cols-4 overflow-hidden min-h-[500px]">
+          
+          {/* Side Panel: Starter & Bio info */}
+          <div className="p-5 bg-gradient-to-b from-slate-50 to-slate-100/50 border-r border-slate-100 flex flex-col justify-between gap-6 text-left">
+            <div className="space-y-4">
+              <div className="flex items-center gap-1 text-emerald-600 font-bold text-xs uppercase tracking-wider">
+                <Icon name="sparkles" className="w-3.5 h-3.5" />
+                <span>Petunjuk Konseling</span>
+              </div>
+              
+              <div className="space-y-1">
+                <h4 className="font-display font-extrabold text-[#111827] text-sm leading-snug">
+                  Mulai Cerita Batinmu
+                </h4>
+                <p className="text-[11px] text-slate-500 leading-relaxed">
+                  Gunakan pemantik cepat di bawah atau tuliskan secara bebas perasaamu—entah itu tentang sekolah, keluarga, atau cemas masa depan.
+                </p>
+              </div>
+
+              {/* Starter Buttons */}
+              <div className="space-y-2 pt-2">
+                {STARTERS.map((starter, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => submitChat(starter)}
+                    className="w-full text-left bg-white hover:bg-emerald-50 border border-slate-200/60 hover:border-emerald-300 rounded-xl p-3 text-[11px] font-medium text-slate-600 hover:text-emerald-800 transition-all shadow-2xs cursor-pointer block leading-normal"
+                  >
+                    "{starter}"
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Context Notice info */}
+            {currentArticleContext && (
+              <div className="bg-amber-50 rounded-2xl p-3.5 border border-amber-200/60 relative space-y-1">
+                <button 
+                  onClick={onClearArticleContext}
+                  className="absolute top-1.5 right-1.5 text-slate-400 hover:text-slate-600 text-xs"
+                >
+                  ✕
+                </button>
+                <p className="text-[10px] font-bold text-amber-800 uppercase tracking-wide">Konteks Diskusi Artikel</p>
+                <p className="text-[10px] text-amber-700 font-semibold line-clamp-2 leading-relaxed">
+                  "{currentArticleContext}"
+                </p>
+              </div>
+            )}
+          </div>
+
+          {/* Chat Workspace content viewport */}
+          <div className="md:col-span-3 h-[450px] md:h-[520px] flex flex-col bg-white">
+            
+            {/* Header top row */}
+            <div className="border-b border-slate-100 py-3.5 px-5 flex items-center justify-between text-left">
+              <div className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                <div>
+                  <h4 className="font-bold text-slate-800 text-xs md:text-sm">Akifah - Juru Dengar Batin</h4>
+                  <p className="text-[10px] text-slate-400">Aktif menyimak curahan jiwamu</p>
+                </div>
+              </div>
+
+              {/* Reset action */}
+              <button
+                onClick={() => {
+                  if(confirm("Apakah Anda ingin menyeka riwayat chat batin lama ini?")) {
+                    setMessages([{
+                      id: 'welcome',
+                      role: 'model',
+                      text: `Halo ${userName || 'Sahabatku'}! Saya sudah merapikan layar diskusi lama kita. Mari buka halaman baru batin yang tenang. Ada yang ingin kita diskusikan baru?`,
+                      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                    }]);
+                  }
+                }}
+                className="text-slate-400 hover:text-red-500 p-1.5 rounded-lg text-xs font-bold transition-colors flex items-center gap-1 cursor-pointer"
+                title="Buka Lembaran Baru"
+              >
+                <Icon name="refresh-cw" className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Bersihkan</span>
+              </button>
+            </div>
+
+            {/* Chat list messages overflow port */}
+            <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-4 bg-slate-50/30">
+              {messages.map((m) => {
+                const isModel = m.role === 'model';
+                return (
+                  <div 
+                    key={m.id} 
+                    className={`flex items-start gap-2.5 ${isModel ? 'justify-start' : 'justify-end'}`}
+                  >
+                    {isModel && (
+                      <div className="w-7 h-7 rounded-xl bg-emerald-600 flex items-center justify-center shrink-0 shadow-sm animate-float">
+                        <Icon name="heart" className="w-4 h-4 text-white" fill="white" />
+                      </div>
+                    )}
+
+                    <div className="flex flex-col max-w-[85%] md:max-w-[75%] space-y-1">
+                      <div className={`rounded-2xl px-4 py-3 text-xs md:text-sm border leading-relaxed text-left space-y-2 select-text ${
+                        isModel 
+                          ? 'bg-white text-slate-800 border-slate-150 rounded-tl-none shadow-3xs' 
+                          : 'bg-emerald-600 text-white border-emerald-600 rounded-tr-none'
+                      }`}>
+                        {m.text.split('\n\n').map((para, pIdx) => (
+                          <p key={pIdx}>
+                            {para.split('\n').map((line, lIdx) => {
+                              // basic markdown highlighting support for bolder counseling
+                              let processed = line;
+                              // Bold syntax "**"
+                              const boldRegex = /\*\*(.*?)\*\*/g;
+                              const matchBold = processed.match(boldRegex);
+                              if (matchBold) {
+                                return (
+                                  <span key={lIdx} className="block">
+                                    {processed.split('**').map((part, partIdx) => 
+                                      partIdx % 2 === 1 ? <strong key={partIdx} className="font-extrabold">{part}</strong> : part
+                                    )}
+                                  </span>
+                                );
+                              }
+                              return <span key={lIdx} className="block">{processed}</span>;
+                            })}
+                          </p>
+                        ))}
+                      </div>
+                      <span className={`text-[9px] text-slate-400 font-mono font-bold ${isModel ? 'text-left' : 'text-right'}`}>
+                        {m.timestamp}
+                      </span>
+                    </div>
+
+                    {!isModel && (
+                      <div className="w-7 h-7 rounded-xl bg-purple-600 flex items-center justify-center shrink-0 shadow-sm font-bold text-xs text-white">
+                        {(userName || 'S')[0].toUpperCase()}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+
+              {typing && (
+                <div className="flex items-start gap-2.5 justify-start">
+                  <div className="w-7 h-7 rounded-xl bg-emerald-600 flex items-center justify-center shrink-0 shadow-sm">
+                    <Icon name="heart" className="w-4 h-4 text-white" fill="white" />
+                  </div>
+                  <div className="bg-white border border-slate-150 rounded-2xl rounded-tl-none px-4 py-3 flex items-center gap-1.5 shadow-3xs">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-bounce" style={{ animationDelay: '0s' }} />
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-bounce" style={{ animationDelay: '0.2s' }} />
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-bounce" style={{ animationDelay: '0.4s' }} />
+                  </div>
+                </div>
+              )}
+
+              <div ref={feedEndRef} />
+            </div>
+
+            {/* Bottom Form input panel bar */}
+            <div className="border-t border-slate-100 p-4 bg-white whitespace-nowrap">
+              <form 
+                onSubmit={(e) => { 
+                  e.preventDefault(); 
+                  submitChat(input); 
+                }}
+                className="flex items-center gap-2"
+              >
+                <input 
+                  type="text" 
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  placeholder="Ceritakan perasaanmu atau rasa cemasmu hari ini..."
+                  maxLength={400}
+                  disabled={typing}
+                  className="flex-1 bg-slate-50 text-slate-800 text-xs md:text-sm border border-slate-200 rounded-xl px-4 py-3.5 outline-none focus:border-emerald-500 focus:bg-white transition-all font-medium"
+                />
+                
+                <button
+                  type="submit"
+                  disabled={!input.trim() || typing}
+                  className="bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-100 text-white disabled:text-slate-400 rounded-xl px-5 py-3.5 flex items-center gap-1 font-bold text-xs transition-all shadow-sm shadow-emerald-600/10 shrink-0 cursor-pointer"
+                >
+                  <Icon name="send" className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">Kirim</span>
+                </button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      );
+    }
+
+    // ==========================================
+    // --- COMPONENT: POJOK EDUKASI (EDUCATION) --
+    // ==========================================
+    function EducationTab({ onDiscussArticle }) {
+      const [selectedArticle, setSelectedArticle] = useState(null);
+
+      return (
+        <div className="space-y-6 text-left">
+          
+          {selectedArticle ? (
+            <div className="bg-white border border-slate-150 rounded-3xl p-6 md:p-8 space-y-6 shadow-xs animate-fade-in">
+              {/* Back to list head banner action */}
+              <button 
+                onClick={() => setSelectedArticle(null)}
+                className="inline-flex items-center gap-1 text-xs text-emerald-600 hover:text-emerald-700 font-bold transition-colors cursor-pointer group"
+              >
+                <Icon name="arrow-left" className="w-4 h-4 transition-transform group-hover:-translate-x-0.5" />
+                <span>Kembali ke Artikel</span>
+              </button>
+
+              <div className="space-y-4">
+                <div className="flex flex-wrap items-center gap-2 text-xs font-bold text-emerald-600 uppercase">
+                  <span className="bg-emerald-50 px-3 py-1 rounded-full">{selectedArticle.category}</span>
+                </div>
+                
+                <h3 className="font-display font-extrabold text-[#111827] text-2xl md:text-3xl tracking-tight leading-tight">
+                  {selectedArticle.title}
+                </h3>
+
+                <p className="text-slate-400 text-xs font-medium italic">
+                  Edisi Penguatan Mental & Kesejahteraan Remaja • Ruang Teduh
+                </p>
+              </div>
+
+              {/* Rich MD Content parsing client */}
+              <div className="border-t border-slate-100 pt-6 prose prose-slate max-w-none text-slate-700 leading-relaxed text-xs md:text-sm space-y-4">
+                {selectedArticle.content.split('\n\n').map((section, sIdx) => {
+                  if (section.startsWith('###')) {
+                    return <h4 key={sIdx} className="font-display font-bold text-[#111827] text-base md:text-lg pt-2">{section.replace('###', '').trim()}</h4>;
+                  }
+                  if (section.includes('1. ') || section.includes('2. ') || section.includes('3. ')) {
+                    return (
+                      <ul key={sIdx} className="space-y-2.5 list-none pl-1">
+                        {section.split('\n').map((li, lIdx) => {
+                          // bold markdown checker within lists
+                          let cleanedLi = li.replace(/^\d+\.\s+\*\*(.*?)\*\*:/, '');
+                          const boldTitleMatch = li.match(/^\d+\.\s+\*\*(.*?)\*\*:/);
+                          const boldTitleText = boldTitleMatch ? boldTitleMatch[1] : '';
+
+                          return (
+                            <li key={lIdx} className="flex gap-2.5 items-start bg-slate-50 border border-slate-100/60 p-3 rounded-2xl">
+                              <span className="w-5 h-5 rounded-lg bg-emerald-500/10 text-emerald-600 font-bold font-mono text-xs flex items-center justify-center shrink-0 mt-0.5">
+                                {lIdx + 1}
+                              </span>
+                              <div className="text-xs md:text-sm text-slate-700 leading-relaxed">
+                                {boldTitleText && <strong className="font-bold text-slate-800 block mb-0.5">{boldTitleText}</strong>}
+                                <span>{cleanedLi.trim()}</span>
+                              </div>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    );
+                  }
+                  return <p key={sIdx}>{section}</p>;
+                })}
+              </div>
+
+              {/* Discuss option Footer CTA */}
+              <div className="bg-gradient-to-r from-emerald-500/10 to-purple-500/10 rounded-2xl border border-emerald-100/40 p-4 md:p-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-left">
+                <div className="space-y-1">
+                  <h5 className="font-display font-bold text-slate-800 text-sm">Diskusikan Artikel Ini Bersama Akifah?</h5>
+                  <p className="text-[11px] text-slate-500 leading-relaxed">
+                    Kamu bisa langsung curhat, bertanya penjelasan tambahan, atau mempraktikkan latihan ketenangan batin di atas bersamaku.
+                  </p>
+                </div>
+
+                <button
+                  onClick={() => onDiscussArticle(selectedArticle.title)}
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-3 rounded-xl flex items-center gap-1.5 shrink-0 shadow-sm transition-all cursor-pointer"
+                >
+                  <Icon name="heart" className="w-3.5 h-3.5 text-white" fill="white" />
+                  <span>Mulai Diskusi Batin</span>
+                </button>
+              </div>
+
+            </div>
+          ) : (
+            <div className="space-y-6">
+              
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+                  <Icon name="book-open" className="w-3 h-3 text-emerald-600" />
+                  <span>Katalog Bacaan Tenang</span>
+                </div>
+                <h3 className="font-display font-extrabold text-[#111827] text-xl md:text-2xl tracking-tight">
+                  Pojok Edukasi & Penguatan Jiwa
+                </h3>
+                <p className="text-xs text-slate-500 max-w-xl">
+                  Kumpulan tulisan ringan dan panduan praktis yang didesain khusus mendamaikan berbagai badai emosi remaja.
+                </p>
+              </div>
+
+              {/* Articles bento card list layout */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {ARTICLES.map((art) => (
+                  <div 
+                    key={art.id}
+                    className="bg-white border border-slate-150 rounded-2xl overflow-hidden shadow-2xs hover:shadow-sm transition-all duration-200 flex flex-col justify-between"
+                  >
+                    <div className="p-5 space-y-3.5 text-left">
+                      <span className="bg-emerald-50 text-emerald-600 text-[10px] uppercase font-bold tracking-wider px-2 py-1 rounded-full">
+                        {art.category}
+                      </span>
+                      
+                      <h4 className="font-display font-bold text-slate-800 text-sm md:text-base leading-snug line-clamp-2">
+                        {art.title}
+                      </h4>
+                      
+                      <p className="text-xs text-slate-500 leading-relaxed line-clamp-3">
+                        {art.brief}
+                      </p>
+
+                      <div className="flex flex-wrap items-center gap-1.5 pt-1.5">
+                        {art.tags.map((tg, tIdx) => (
+                          <span key={tIdx} className="text-[9px] text-[#6B7280] bg-slate-100 px-2 py-0.5 rounded-md font-medium">#{tg}</span>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="bg-slate-50 border-t border-slate-100 p-4 flex items-center justify-between gap-1 shrink-0">
+                      <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Edisi Remaja</span>
+                      
+                      <button
+                        onClick={() => setSelectedArticle(art)}
+                        className="text-xs font-bold text-emerald-600 hover:text-emerald-700 transition-colors flex items-center gap-0.5 cursor-pointer"
+                      >
+                        Baca Selengkapnya ➝
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+            </div>
+          )}
+
+        </div>
+      );
+    }
+
+    // ==========================================
+    // --- COMPONENT: JURNAL BATIN (MOOD LOG) ----
+    // ==========================================
+    function JournalTab({ journalEntries, setJournalEntries }) {
+      const MOOD_OPTIONS = [
+        { emoji: '🌅', label: 'Damai & Tenang', color: 'emerald' },
+        { emoji: '☀️', label: 'Ceria & Happy', color: 'amber' },
+        { emoji: '☁️', label: 'Biasa Saja', color: 'slate' },
+        { emoji: '🌧️', label: 'Sedih / Galau', color: 'blue' },
+        { emoji: '🌩️', label: 'Cemas & Takut', color: 'orange' },
+        { emoji: '🌋', label: 'Kesal & Marah', color: 'red' }
+      ];
+
+      const [selectedMood, setSelectedMood] = useState('Damai & Tenang');
+      const [journalText, setJournalText] = useState('');
+
+      const saveEntry = (e) => {
+        e.preventDefault();
+        if (!journalText.trim()) return alert("Tuliskan sepatah dua patah kata perasaamu terlebih dahulu");
+
+        const newEntry = {
+          id: 'journ_' + Date.now(),
+          mood: selectedMood,
+          text: journalText.trim(),
+          date: new Date().toLocaleDateString('id-ID', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+          }),
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        };
+
+        setJournalEntries([newEntry, ...journalEntries]);
+        setJournalText('');
+        alert("Pikiranmu berhasil diabadikan dengan aman di jurnal batinmu. ✨");
+      };
+
+      const deleteEntry = (id) => {
+        if (confirm("Ingin menghapus catatan jurnal ini?")) {
+          setJournalEntries(journalEntries.filter(ent => ent.id !== id));
+        }
+      };
+
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left animate-fade-in">
+          
+          {/* Write Entry panel */}
+          <div className="md:col-span-1 bg-white border border-slate-150 rounded-3xl p-5 md:p-6 space-y-6 h-fit">
+            <div className="space-y-1">
+              <div className="flex items-center gap-1.5 text-emerald-600 text-xs font-bold uppercase tracking-wider">
+                <Icon name="pen-tool" className="w-4 h-4 text-emerald-600" />
+                <span>Pencatat Suasana Hati</span>
+              </div>
+              <h3 className="font-display font-extrabold text-[#111827] text-lg">
+                Urai Pikiranmu
+              </h3>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Menulis jurnal batin terbukti mengurangi rasa overthinking secara berkala. Pilih mood batinmu saat ini:
+              </p>
+            </div>
+
+            <form onSubmit={saveEntry} className="space-y-4">
+              
+              {/* Mood Emojis selector list */}
+              <div className="grid grid-cols-3 gap-2">
+                {MOOD_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.label}
+                    type="button"
+                    onClick={() => setSelectedMood(opt.label)}
+                    className={`p-2.5 rounded-2xl flex flex-col items-center justify-center border transition-all text-center gap-1 cursor-pointer ${
+                      selectedMood === opt.label
+                        ? 'border-emerald-500 bg-emerald-50 text-emerald-950 scale-[1.03] ring-1 ring-emerald-300'
+                        : 'border-slate-100 hover:bg-slate-50 text-slate-700'
+                    }`}
+                  >
+                    <span className="text-2xl">{opt.emoji}</span>
+                    <span className="text-[9px] font-bold tracking-tight">{opt.label}</span>
+                  </button>
+                ))}
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-slate-700 block">Ada apa di dalam benakmu hari ini? Urai di sini:</label>
+                <textarea
+                  value={journalText}
+                  onChange={(e) => setJournalText(e.target.value)}
+                  placeholder="Misalnya: Hari ini aku lelah sekali belajar untuk ujian biologi, tapi setelah cerita sama Akifah batin jadi berasa mendingan..."
+                  required
+                  rows={4}
+                  className="w-full bg-slate-50 text-slate-800 text-xs md:text-sm border border-slate-200 rounded-2xl p-3 outline-none focus:bg-white focus:border-emerald-500 focus:ring-1 focus:ring-emerald-300 transition-all text-left"
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs p-3.5 rounded-xl flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/10 hover:scale-[1.01] transition-all cursor-pointer"
+              >
+                <Icon name="check" className="w-4 h-4 text-white" />
+                <span>Simpan di Jurnal Batin</span>
+              </button>
+            </form>
+          </div>
+
+          {/* History Lists Panel columns */}
+          <div className="md:col-span-2 space-y-5">
+            <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
+              <Icon name="clock" className="w-5 h-5 text-purple-600" />
+              <h4 className="font-display font-extrabold text-slate-800 text-base">
+                Lembaran Sejarah Pikiranmu
+              </h4>
+            </div>
+
+            {journalEntries.length === 0 ? (
+              <div className="bg-white border border-slate-150 rounded-3xl p-10 text-center space-y-4">
+                <span className="text-4xl">🕊️</span>
+                <div className="space-y-1 text-center">
+                  <h5 className="font-display font-bold text-slate-800 text-sm">Lembaran Anda Masih Kosong Sekali</h5>
+                  <p className="text-xs text-slate-400 max-w-sm mx-auto leading-relaxed">
+                    Belum ada riwayat pikiran yang diurai. Menulislah malam ini untuk mulai merapikan badai kecemasan batinmu.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-4 max-h-[520px] overflow-y-auto pr-1">
+                {journalEntries.map((ent) => (
+                  <div 
+                    key={ent.id}
+                    className="bg-white border border-slate-150 rounded-2xl p-4.5 shadow-2xs hover:shadow-xs transition-shadow flex flex-col justify-between gap-4"
+                  >
+                    <div className="space-y-2.5">
+                      <div className="flex items-center justify-between gap-2.5">
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl" id="journal-emoji-icon">
+                            {ent.mood === 'Damai & Tenang' && '🌅'}
+                            {ent.mood === 'Ceria & Happy' && '☀️'}
+                            {ent.mood === 'Biasa Saja' && '☁️'}
+                            {ent.mood === 'Sedih / Galau' && '🌧️'}
+                            {ent.mood === 'Cemas & Takut' && '🌩️'}
+                            {ent.mood === 'Kesal & Marah' && '🌋'}
+                          </span>
+                          
+                          <div>
+                            <span className="text-[10px] font-bold text-emerald-800 uppercase bg-emerald-50 px-2.5 py-0.5 rounded-full tracking-wider">
+                              {ent.mood}
+                            </span>
+                          </div>
+                        </div>
+
+                        <button
+                          onClick={() => deleteEntry(ent.id)}
+                          className="text-slate-300 hover:text-red-500 transition-colors p-1"
+                          title="Hapus Lembaran"
+                        >
+                          <Icon name="trash-2" className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+
+                      <p className="text-xs md:text-sm text-slate-700 leading-relaxed font-medium">
+                        {ent.text}
+                      </p>
+                    </div>
+
+                    <div className="border-t border-slate-100 pt-3 flex items-center justify-between text-[10px] text-slate-400 shrink-0 font-semibold font-mono">
+                      <span>Hari {ent.date}</span>
+                      <span>Jam {ent.time}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+        </div>
+      );
+    }
+
+    // ==========================================
+    // --- COMPONENT: CALCULATOR STRES (QUIZ) ---
+    // ==========================================
+    function StressCalculatorTab({ onSwitchToChat }) {
+      const [currentQ, setCurrentQ] = useState(0);
+      const [answers, setAnswers] = useState({});
+      const [resultScore, setResultScore] = useState(null);
+
+      const handleAnswer = (score) => {
+        const nextAnswers = { ...answers, [currentQ]: score };
+        setAnswers(nextAnswers);
+
+        if (currentQ < QUIZ_QUESTIONS.length - 1) {
+          setCurrentQ(currentQ + 1);
+        } else {
+          // Calculate total
+          const total = Object.values(nextAnswers).reduce((acc, curr) => acc + curr, 0);
+          setResultScore(total);
+        }
+      };
+
+      const handleResetQuiz = () => {
+        setCurrentQ(0);
+        setAnswers({});
+        setResultScore(null);
+      };
+
+      const getStressCategory = (score) => {
+        if (score <= 4) return { label: 'Tingkat Stres Rendah (Normal)', css: 'bg-emerald-50 text-emerald-800 border-emerald-200', desc: 'Batinmu berada dalam kondisi yang stabil dan terkendali dengan baik. Teruskan aktivitas positifmu, sempatkan journaling, serta jangan ragu beristirahat jika badan terasa sedikit lelah.', emote: '🌿' };
+        if (score <= 9) return { label: 'Tingkat Stres Sedang (Wajar)', css: 'bg-amber-50 text-amber-800 border-amber-200', desc: 'Ada beberapa tekanan eksternal (seperti tugas menumpuk atau kecemasan kecil) yang mulai mengusik ketenangan jiwamu. Gunakan teknik Box Breathing di Pojok Edukasi atau ceritakan keresahanmu pada Akifah agar tidak menjadi beban bertumpuk.', emote: '⛅' };
+        return { label: 'Tingkat Stres Tinggi (Butuh Perhatian)', css: 'bg-red-50 text-red-800 border-red-200', desc: 'Batinmu sedang dalam kondisi yang bising, kewalahan, dan sangat butuh didengarkan. Segera letakkan aktivitas belajarmu sejenak. Kamu sangat dianjurkan untuk bercerita langsung ke WhatsApp pendamping (Akifah) atau psikolog profesional di alamat SOS.', emote: '🌩️' };
+      };
+
+      return (
+        <div className="max-w-xl mx-auto text-left animate-fade-in">
+          
+          {resultScore !== null ? (
+            <div className="bg-white border border-slate-150 rounded-3xl p-6 md:p-8 space-y-6 shadow-xs">
+              
+              <div className="space-y-2 text-center">
+                <span className="text-4xl block mb-2">{getStressCategory(resultScore).emote}</span>
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Hasil Refleksi Diri</p>
+                <h3 className="font-display font-extrabold text-[#111827] text-xl">
+                  {getStressCategory(resultScore).label}
+                </h3>
+              </div>
+
+              {/* Score panel box */}
+              <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 text-center space-y-1">
+                <div className="text-3xl font-bold font-mono text-emerald-600 font-black">
+                  {resultScore} <span className="text-xs text-slate-400 font-semibold">/ 15</span>
+                </div>
+                <p className="text-[10px] text-slate-500 font-semibold">Total Poin Skor Kesejahteraan Batin</p>
+              </div>
+
+              <div className="text-xs md:text-sm text-slate-600 leading-relaxed text-center font-medium max-w-sm mx-auto">
+                {getStressCategory(resultScore).desc}
+              </div>
+
+              {/* Results CTA footer action list */}
+              <div className="pt-4 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-3 shrink-0">
+                <button
+                  onClick={handleResetQuiz}
+                  className="w-full md:w-auto text-center px-4 py-2.5 rounded-xl border border-slate-200 hover:bg-slate-50 text-xs font-bold text-slate-600 transition-all cursor-pointer"
+                >
+                  Ulangi Tes
+                </button>
+
+                <button
+                  onClick={onSwitchToChat}
+                  className="w-full md:w-auto bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-5 py-3 rounded-xl flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/10 transition-all cursor-pointer"
+                >
+                  <Icon name="heart" className="w-4 h-4 text-white" fill="white" />
+                  <span>Curhat ke Akifah Sekarang</span>
+                </button>
+              </div>
+
+            </div>
+          ) : (
+            <div className="bg-white border border-slate-150 rounded-3xl p-6 md:p-8 space-y-6 shadow-xs">
+              
+              {/* Question heading */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between text-xs font-bold text-emerald-600 uppercase">
+                  <span>Kalkulator Tingkat Stres Remaja</span>
+                  <span className="font-mono">{currentQ + 1} / {QUIZ_QUESTIONS.length}</span>
+                </div>
+                
+                {/* Active progress bar */}
+                <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div 
+                    className="bg-emerald-500 h-full transition-all duration-300"
+                    style={{ width: `${((currentQ + 1) / QUIZ_QUESTIONS.length) * 100}%` }}
+                  />
+                </div>
+              </div>
+
+              {/* Core question */}
+              <div className="space-y-4">
+                <h4 className="font-display font-extrabold text-[#111827] text-base md:text-lg tracking-tight leading-snug">
+                  {QUIZ_QUESTIONS[currentQ].text}
+                </h4>
+
+                <div className="space-y-2.5">
+                  {QUIZ_QUESTIONS[currentQ].options.map((opt, oIdx) => (
+                    <button
+                      key={oIdx}
+                      onClick={() => handleAnswer(opt.score)}
+                      className="w-full text-left bg-slate-50 hover:bg-emerald-50 border border-slate-200/60 hover:border-emerald-300 rounded-2xl p-4 text-xs md:text-sm font-semibold text-slate-700 hover:text-emerald-950 transition-all cursor-pointer flex items-center gap-3 shadow-3xs"
+                    >
+                      <span className="w-6 h-6 rounded-lg bg-white border border-slate-200/60 font-bold font-mono text-xs text-slate-500 flex items-center justify-center shrink-0">
+                        {String.fromCharCode(65 + oIdx)}
+                      </span>
+                      <span className="leading-relaxed">{opt.text}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+            </div>
+          )}
+
+        </div>
+      );
+    }
+
+    // ==========================================
+    // --- COMPONENT: ALAMAT PENTING (EMERGENCY) -
+    // ==========================================
+    function EmergencyTab() {
+      return (
+        <div className="space-y-6 text-left animate-fade-in">
+          
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-1 bg-red-50 text-red-700 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider">
+              <Icon name="phone-call" className="w-3" />
+              <span>Kontak Krisis & Rujukan Penting</span>
+            </div>
+            
+            <h3 className="font-display font-extrabold text-[#111827] text-xl md:text-2xl tracking-tight">
+              Bantuan Penguatan Batin Segera (SOS)
+            </h3>
+            
+            <p className="text-xs text-slate-500 max-w-xl">
+              Jangan dipendam sendirian ya sahabat. Jika kamu merasa sangat kewalahan, dada terasa sesak luar biasa, atau ada pikiran melukai diri, hubungi segera rujukan bebas biaya berikut ini:
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {EMERGENCY_HOTLINES.map((hot, idx) => (
+              <div 
+                key={idx}
+                className="bg-white border border-slate-150 rounded-2xl p-4 md:p-5 flex flex-col justify-between gap-4 text-left shadow-2xs hover:shadow-xs transition-shadow"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[9px] font-bold text-red-600 uppercase bg-red-50 tracking-wider px-2 py-0.5 rounded">
+                      {hot.type}
+                    </span>
+                  </div>
+                  
+                  <h5 className="font-display font-bold text-slate-800 text-xs md:text-sm leading-tight">
+                    {hot.name}
+                  </h5>
+                  
+                  <p className="text-[11px] text-slate-500 leading-normal">
+                    {hot.description}
+                  </p>
+                </div>
+
+                {/* Hot Phone Link panel action with tel support */}
+                <div className="border-t border-slate-100 pt-3 flex items-center justify-between gap-2 shrink-0">
+                  <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">No Kontak:</span>
+                  <a 
+                    href={hot.phone.includes('.org') ? `https://${hot.phone}` : `tel:${hot.phone}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-red-50 hover:bg-red-100 text-red-700 font-black text-xs px-4 py-2 rounded-xl flex items-center gap-1.5 transition-all"
+                  >
+                    <Icon name="phone-call" className="w-3.5 h-3.5 text-red-700 fill-red-400" />
+                    <span>{hot.phone}</span>
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <p className="text-[10px] text-slate-400 text-center select-text">
+            Informasi di atas dihimpun secara tulus untuk media bantuan pertolongan pertama krisis mental remaja Indonesia.
+          </p>
+
+        </div>
+      );
+    }
+
+    // ==========================================
+    // --- COMPONENT: FEEDBACK & TESTIMONIALS ----
+    // ==========================================
+    function FeedbackTab({ feedbacksList, setFeedbacksList, ratingsCount, averageScore }) {
+      const [rating, setRating] = useState(0);
+      const [hoverRating, setHoverRating] = useState(0);
+      const [comment, setComment] = useState('');
+      const [isSubmitted, setIsSubmitted] = useState(false);
+
+      useEffect(() => {
+        const savedSubmitted = localStorage.getItem('sahabat_satisfied_submitted');
+        if (savedSubmitted === 'true') {
+          setIsSubmitted(true);
+          const savedRating = localStorage.getItem('sahabat_satisfied_rating');
+          const savedComment = localStorage.getItem('sahabat_satisfied_comment');
+          if (savedRating) setRating(parseInt(savedRating, 10));
+          if (savedComment) setComment(savedComment);
+        }
+      }, []);
+
+      const handleSubmitFeed = (e) => {
+        e.preventDefault();
+        if (rating === 0) return alert("Silakan sentuh untuk memilih peringkat bintang (1-5)");
+
+        const author = localStorage.getItem('sahabat_username') || 'Sahabat Teduh';
+        
+        const newFeedback = {
+          id: 'f_new_' + Date.now(),
+          rating: rating,
+          comment: comment.trim(),
+          createdAt: new Date().toISOString(),
+          userName: author
+        };
+
+        const updatedList = [newFeedback, ...feedbacksList];
+        setFeedbacksList(updatedList);
+
+        localStorage.setItem('sahabat_satisfied_submitted', 'true');
+        localStorage.setItem('sahabat_satisfied_rating', rating.toString());
+        localStorage.setItem('sahabat_satisfied_comment', comment);
+        setIsSubmitted(true);
+      };
+
+      const handleEditRating = () => {
+        setIsSubmitted(false);
+      };
+
+      const formatDateIndo = (dateStr) => {
+        try {
+          const date = new Date(dateStr);
+          return date.toLocaleDateString('id-ID', { 
+            day: 'numeric', 
+            month: 'long', 
+            year: 'numeric' 
+          });
+        } catch {
+          return 'Baru saja';
+        }
+      };
+
+      return (
+        <section className="bg-white border-t border-b border-slate-100 py-12 px-4 text-left">
+          <div className="max-w-4xl mx-auto space-y-10">
+            
+            {/* Core Rating Box */}
+            <div className="bg-slate-50/50 rounded-3xl border border-emerald-100/60 p-6 md:p-8">
+              
+              {/* Header Title Grid */}
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-200/50 pb-6 mb-6">
+                <div className="space-y-2 text-left">
+                  <div className="flex items-center gap-1.5 text-emerald-600 text-xs font-bold uppercase tracking-wider">
+                    <Icon name="star" className="w-4 h-4 fill-emerald-500 text-emerald-500 animate-pulse" />
+                    <span>Evaluasi Kualitas Pendampingan</span>
+                  </div>
+                  <h3 className="font-display font-extrabold text-[#111827] text-lg md:text-xl">
+                    Apakah Layanan Ini Membantu Anda?
+                  </h3>
+                  <p className="text-xs text-slate-500">
+                    Penilaianmu melatih batin kecerdasan Akifah menjadi media bimbingan yang lebih ramah, empati, dan suportif bagi sahabat remaja.
+                  </p>
+                </div>
+
+                {/* Score badge */}
+                <div className="flex items-center gap-3 bg-emerald-500/10 text-emerald-950 border border-emerald-200/40 rounded-2xl p-3 shrink-0 self-start md:self-auto shadow-xs">
+                  <div className="text-center font-mono font-bold text-xl text-emerald-700">
+                    {averageScore} <span className="text-xs text-slate-400">/ 5</span>
+                  </div>
+                  <div className="text-left border-l border-emerald-300/30 pl-3">
+                    <p className="text-[10px] text-emerald-800 font-bold uppercase tracking-wider">Kesejukan Batin</p>
+                    <p className="text-[10px] text-slate-500 font-semibold">{ratingsCount} Ulasan Masuk</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Form submit/saved display state */}
+              {isSubmitted ? (
+                <div className="text-center py-6 space-y-4">
+                  <div className="w-12 h-12 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto border border-emerald-200">
+                    <Icon name="heart" className="w-6 h-6 stroke-[3]" />
+                  </div>
+                  
+                  <div className="space-y-1">
+                    <h4 className="font-display font-bold text-slate-800 text-sm md:text-base">
+                      Terima Kasih Atas Apresiasi Hangatmu!
+                    </h4>
+                    <p className="text-xs text-slate-500 max-w-md mx-auto leading-relaxed">
+                      Penilaian bintang <strong className="text-emerald-700 font-bold">{rating} dari 5</strong> berhasil disimpan secara real-time. Ulasanmu selalu menjadi cahaya batin layanan kami.
+                    </p>
+                  </div>
+
+                  {comment.trim() && (
+                    <div className="max-w-md mx-auto bg-white border border-slate-100 rounded-2xl p-4 italic text-slate-600 text-xs text-left shadow-xs">
+                      "{comment}"
+                    </div>
+                  )}
+
+                  <div className="pt-2">
+                    <button
+                      onClick={handleEditRating}
+                      className="inline-flex items-center gap-1.5 text-xs text-emerald-600 hover:text-emerald-700 font-bold transition-all underline cursor-pointer"
+                    >
+                      <Icon name="pen-tool" className="w-3.5 h-3.5" /> Ubah Penilaian Anda
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmitFeed} className="space-y-6">
+                  
+                  {/* Rating selection stars */}
+                  <div className="space-y-2 text-left">
+                    <label className="text-xs font-bold text-slate-700 block">
+                      1. Sentuh atau klik untuk memilih bintang perasaanmu (1 - 5) :
+                    </label>
+
+                    <div className="flex flex-wrap items-center justify-start gap-2.5 py-1.5">
+                      <div className="flex items-center gap-1">
+                        {[1, 2, 3, 4, 5].map((starValue) => {
+                          const active = (hoverRating || rating) >= starValue;
+                          return (
+                            <button
+                              key={starValue}
+                              type="button"
+                              onClick={() => setRating(starValue)}
+                              onMouseEnter={() => setHoverRating(starValue)}
+                              onMouseLeave={() => setHoverRating(0)}
+                              className="p-1 hover:scale-110 transition-transform duration-150 cursor-pointer focus:outline-none"
+                              title={`Bintang ${starValue}`}
+                            >
+                              <Icon 
+                                name="star" 
+                                className={`w-8 h-8 transition-colors ${
+                                  active 
+                                    ? 'fill-amber-400 text-amber-400' 
+                                    : 'text-slate-200'
+                                }`} 
+                              />
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      <span className="text-xs font-bold text-slate-700 ml-2 bg-slate-100 px-3 py-1 rounded-full">
+                        {rating === 1 && '😢 Kurang Membantu'}
+                        {rating === 2 && '😕 Cukup Membantu'}
+                        {rating === 3 && '🙂 Lumayan Membantu'}
+                        {rating === 4 && '😊 Sangat Membantu'}
+                        {rating === 5 && '💖 Istimewa, Membantu Sekali!'}
+                        {rating === 0 && 'Sentuh bintang di atas'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Suggestion text comment */}
+                  <div className="space-y-2 text-left">
+                    <label className="text-xs font-bold text-slate-700 block">
+                      2. Bagikan ulasan singkat sahabat tentang Ruang Teduh (opsional) :
+                    </label>
+                    <textarea
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                      placeholder="Contoh: Layanan curhat Akifah sangat mendengarkan, batin rasanya jauh lebih ringan apalagi habis meditasi box breathing..."
+                      rows={3}
+                      className="w-full bg-white text-slate-800 text-xs md:text-sm border border-slate-200 rounded-xl p-3.5 outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-300 text-left transition-all"
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-end">
+                    <button
+                      type="submit"
+                      disabled={rating === 0}
+                      className="bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-200 text-white disabled:text-slate-400 font-bold text-xs px-6 py-3 rounded-xl flex items-center gap-1.5 shadow-md shadow-emerald-600/10 hover:scale-[1.01] transition-all cursor-pointer"
+                    >
+                      <Icon name="heart" className="w-3.5 h-3.5 text-white" />
+                      <span>Kirim Ulasan Batin</span>
+                    </button>
+                  </div>
+
+                </form>
+              )}
+
+            </div>
+
+            {/* Testimonial Wall Grid lists */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2">
+                  <Icon name="smile" className="w-5 h-5 text-purple-600" />
+                  <h4 className="font-display font-extrabold text-slate-800 text-base">
+                    Dinding Curahan Hati Sahabat
+                  </h4>
+                </div>
+                <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#6B7280] bg-slate-100 px-2.5 py-1 rounded-full">
+                  {ratingsCount} Testimoni Nyata
+                </span>
+              </div>
+
+              <p className="text-xs text-slate-500 max-w-xl text-left leading-relaxed">
+                Inilah ruang kejujuran batin dari ribuan remaja yang saling menguatkan dalam perjalanan pendampingan di Ruang Teduh.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-h-[500px] overflow-y-auto pr-1.5">
+                {feedbacks.map((item) => (
+                  <div 
+                    key={item.id}
+                    className="bg-white hover:bg-slate-50/40 border border-slate-100 rounded-2xl p-4 transition-all duration-200 flex flex-col justify-between gap-3 text-left shadow-2xs hover:shadow-xs"
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-2">
+                          <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-purple-100 to-emerald-100 text-[#111827] flex items-center justify-center font-bold text-xs uppercase shadow-3xs border border-white">
+                            {(item.userName || 'S')[0]}
+                          </div>
+                          <span className="text-xs font-bold text-slate-700">
+                            {item.userName || 'Sahabat Anonim'}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center gap-0.5 bg-amber-50 px-2 py-0.5 rounded-lg border border-amber-100/50">
+                          <Icon name="star" className="w-3 h-3 fill-amber-400 text-amber-400" />
+                          <span className="text-[10px] font-bold text-amber-800">{item.rating}</span>
+                        </div>
+                      </div>
+
+                      <p className="text-xs text-slate-600 leading-relaxed italic font-medium">
+                        "{item.comment || 'Membagikan penilaian bintang hangat untuk bimbingan ini!'}"
+                      </p>
+                    </div>
+
+                    <div className="flex items-center justify-between text-[10px] text-slate-400 border-t border-slate-50/80 pt-2 shrink-0">
+                      <span className="flex items-center gap-1">
+                        <Icon name="sparkles" className="w-3 h-3 text-emerald-500" fill="currentColor" />
+                        <span>Verifikasi Sahabat</span>
+                      </span>
+                      <span>{formatDateIndo(item.createdAt)}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+          </div>
+        </section>
+      );
+    }
+
+    // --- Boot and render React Applet DOM ---
+    const container = document.getElementById('root');
+    const root = ReactDOM.createRoot(container);
+    root.render(<App />);
+  </script>
+</body>
+</html>
